@@ -10,7 +10,7 @@ Each lesson is linked below (download the entire project to access all lessons a
 
 - [1.3_transform.Rmd](https://github.com/dougaparry/Intro-to-R/blob/master/1.3_transform.Rmd)
   - R4ds chapter: 5
-- [2.1_data_intro.Rmd](https://github.com/dougaparry/Intro-to-R/blob/master/2.1_data_intro.Rmd)
+- [2.1_data_intro.Rmd](https://github.com/dougaparry/Intro-to-R/blob/master/2.1_data_intro.Rmd) ([session video](https://youtu.be/ezGdsa8U05s))
   - R4ds chapters: 11, 12, 13
 - [3.1_data_types.Rmd](https://github.com/dougaparry/Intro-to-R/blob/master/3.1_data_types.Rmd) ([session video](https://youtu.be/vjzA4XS3Nps))
   - R4ds chapters: 14, 15, 16, 20
