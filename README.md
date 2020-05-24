@@ -8,16 +8,16 @@ The sessions are built around the book R 4 Data Science (https://r4ds.had.co.nz)
 ## 5 Lessons with associated code, data, and videos
 Each lesson is linked below (download the entire project to access all lessons and datasets)
 
-- [1.3_transform.Rmd](https://github.com/dougaparry/Intro-to-R/blob/master/1.3_transform.Rmd){:target="_blank"}
+- [1.3_transform.Rmd](https://github.com/dougaparry/Intro-to-R/blob/master/1.3_transform.Rmd)
   - R4ds chapter: 5
-- [2.1_data_intro.Rmd](https://github.com/dougaparry/Intro-to-R/blob/master/2.1_data_intro.Rmd){:target="_blank"}
+- [2.1_data_intro.Rmd](https://github.com/dougaparry/Intro-to-R/blob/master/2.1_data_intro.Rmd)
   - R4ds chapters: 11, 12, 13
-- [3.1_data_types.Rmd](https://github.com/dougaparry/Intro-to-R/blob/master/3.1_data_types.Rmd){:target="_blank"}
+- [3.1_data_types.Rmd](https://github.com/dougaparry/Intro-to-R/blob/master/3.1_data_types.Rmd)
   - R4ds chapters: 14, 15, 16, 20
-- [4.1_dataviz.Rmd](https://github.com/dougaparry/Intro-to-R/blob/master/4.1_dataviz.Rmd){:target="_blank"} ([session video](https://youtu.be/RpTeOej_jAI)){:target="_blank"}
-  - [Fundamentals of data visualistion](https://serialmentor.com/dataviz/){:target="_blank"} (theory)
+- [4.1_dataviz.Rmd](https://github.com/dougaparry/Intro-to-R/blob/master/4.1_dataviz.Rmd) ([session video](https://youtu.be/RpTeOej_jAI))
+  - [Fundamentals of data visualistion](https://serialmentor.com/dataviz/) (theory)
   - [Data Visualisation A practical introduction](https://socviz.co){:target="_blank"} (practical)
-- [5.1_exploration_iteration.Rmd](https://github.com/dougaparry/Intro-to-R/blob/master/5.1_exploration_iteration.Rmd){:target="_blank"}
+- [5.1_exploration_iteration.Rmd](https://github.com/dougaparry/Intro-to-R/blob/master/5.1_exploration_iteration.Rmd)
   - R4ds chapters: 21, 7
 
 
