@@ -7,7 +7,7 @@ The sessions are built around the book R 4 Data Science (https://r4ds.had.co.nz)
 
 ## 5 Lessons with associated code, data, and videos
 
-- ![1.3_transform.Rmd](https://github.com/dougaparry/Intro-to-R/blob/master/1.3_transform.Rmd)
+- !(1.3_transform.Rmd)[https://github.com/dougaparry/Intro-to-R/blob/master/1.3_transform.Rmd]
 - 2.1_data_intro.Rmd
 - 3.1_data_types.Rmd
 - 4.1_dataviz.Rmd
