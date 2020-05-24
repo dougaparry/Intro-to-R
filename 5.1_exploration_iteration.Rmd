@@ -1,0 +1,369 @@
+---
+title: "Session 5"
+output: html_notebook
+---
+
+# Iteration and Exploratory Data Analysis
+
+Resources:
+- https://r4ds.had.co.nz/iteration.html 
+- https://r4ds.had.co.nz/exploratory-data-analysis.html
+
+```{r setup, message = FALSE}
+library(tidyverse)
+```
+
+## For loops
+
+```{r}
+df <- tibble(
+  a = rnorm(10),
+  b = rnorm(10),
+  c = rnorm(10),
+  d = rnorm(10)
+)
+```
+
+```{r}
+median(df$a)
+median(df$b)
+median(df$c)
+median(df$d)
+```
+
+```{r}
+output <- vector("double", ncol(df))  # 1. output
+
+for (i in seq_along(df)) {            # 2. sequence
+  output[[i]] <- median(df[[i]])      # 3. body
+}
+output
+```
+
+1.  The __output__: `output <- vector("double", length(x))`. 
+    
+    A general way of creating an empty vector of given length is the `vector()` function. It has two arguments: the type of the vector ("logical", "integer", "double", "character", etc) and the length of the vector. 
+
+2.  The __sequence__: `i in seq_along(df)`.
+    
+3.  The __body__: `output[[i]] <- median(df[[i]])`. 
+
+## For loop variations
+
+1.  Modifying an existing object, instead of creating a new object.
+2.  Looping over names or values, instead of indices.
+3.  Handling outputs of unknown length.
+4.  Handling sequences of unknown length.
+
+### Modifying an existing object
+
+```{r}
+df <- tibble(
+  a = rnorm(10),
+  b = rnorm(10),
+  c = rnorm(10),
+  d = rnorm(10)
+)
+
+rescale01 <- function(x) {
+  rng <- range(x, na.rm = TRUE)
+  (x - rng[1]) / (rng[2] - rng[1])
+}
+
+df$a <- rescale01(df$a)
+df$b <- rescale01(df$b)
+df$c <- rescale01(df$c)
+df$d <- rescale01(df$d)
+```
+
+```{r}
+for (i in seq_along(df)) {
+  df[[i]] <- rescale01(df[[i]])
+}
+```
+
+## For loops vs. functionals
+
+```{r}
+df <- tibble(
+  a = rnorm(10),
+  b = rnorm(10),
+  c = rnorm(10),
+  d = rnorm(10)
+)
+```
+
+Computing the mean with a for loop
+```{r}
+output <- vector("double", length(df))
+for (i in seq_along(df)) {
+  output[[i]] <- mean(df[[i]])
+}
+output
+```
+
+Creating a function to generalise the loop
+```{r}
+col_mean <- function(df) {
+  output <- vector("double", length(df))
+  for (i in seq_along(df)) {
+    output[i] <- mean(df[[i]])
+  }
+  output
+}
+```
+
+Extending the function
+```{r}
+col_median <- function(df) {
+  output <- vector("double", length(df))
+  for (i in seq_along(df)) {
+    output[i] <- median(df[[i]])
+  }
+  output
+}
+col_sd <- function(df) {
+  output <- vector("double", length(df))
+  for (i in seq_along(df)) {
+    output[i] <- sd(df[[i]])
+  }
+  output
+}
+```
+
+Even more general
+```{r}
+col_summary <- function(df, fun) {
+  out <- vector("double", length(df))
+  for (i in seq_along(df)) {
+    out[i] <- fun(df[[i]])
+  }
+  out
+}
+col_summary(df, median)
+col_summary(df, mean)
+```
+
+# Exploratory Data Analysis
+
+1. Generate questions about your data.
+
+2. Search for answers by visualising, transforming, and modelling your data.
+
+3. Use what you learn to refine your questions and/or generate new questions.
+
+### Ask questions of your data
+
+1. What type of variation occurs within my variables?
+
+2. What type of covariation occurs between my variables?
+
+## Variation
+
+The tendency of the values of a variable to change from measurement to measurement. 
+
+### Visualising distributions
+
+```{r}
+ggplot(data = diamonds) +
+  geom_bar(mapping = aes(x = cut))
+```
+
+```{r}
+diamonds %>% 
+  count(cut)
+```
+
+```{r}
+ggplot(data = diamonds) +
+  geom_histogram(mapping = aes(x = carat), binwidth = 0.5)
+```
+
+```{r}
+smaller <- diamonds %>%
+  filter(carat < 3)
+
+ggplot(data = smaller, mapping = aes(x = carat)) +
+  geom_histogram(binwidth = 0.1)
+```
+
+Multiple histograms
+```{r}
+ggplot(data = smaller, mapping = aes(x = carat, colour = cut)) +
+  geom_freqpoly(binwidth = 0.1)
+```
+
+### Questions to ask your data
+
+* Which values are the most common? Why?
+
+* Which values are rare? Why? Does that match your expectations?
+
+* Can you see any unusual patterns? What might explain them?
+
+```{r}
+ggplot(data = smaller, mapping = aes(x = carat)) +
+  geom_histogram(binwidth = 0.01)
+```
+
+* How are the observations within each cluster similar to each other?
+
+* How are the observations in separate clusters different from each other?
+
+* How can you explain or describe the clusters?
+
+* Why might the appearance of clusters be misleading?
+
+### Unusual values
+
+```{r}
+ggplot(diamonds) + 
+  geom_histogram(mapping = aes(x = y), binwidth = 0.5)
+```   
+
+```{r}
+ggplot(diamonds) + 
+  geom_histogram(mapping = aes(x = y), binwidth = 0.5) +
+  coord_cartesian(ylim = c(0, 50))
+```   
+
+```{r}
+unusual <- diamonds %>% 
+  filter(y < 3 | y > 20) %>% 
+  select(price, x, y, z) %>%
+  arrange(y)
+
+unusual
+```
+
+## Missing values
+
+1.  Drop the entire row with the strange values:
+
+```{r, eval = FALSE}
+diamonds2 <- diamonds %>% 
+      filter(between(y, 3, 20))
+```
+    
+2. Replacee the unusual values with missing values.
+
+```{r}
+diamonds2 <- diamonds %>% 
+  mutate(y = ifelse(y < 3 | y > 20, NA, y))
+```
+
+
+```{r}
+nycflights13::flights %>% 
+  mutate(
+    cancelled = is.na(dep_time),
+    sched_hour = sched_dep_time %/% 100,
+    sched_min = sched_dep_time %% 100,
+    sched_dep_time = sched_hour + sched_min / 60
+  ) %>% 
+  ggplot(mapping = aes(sched_dep_time)) + 
+    geom_freqpoly(mapping = aes(colour = cancelled), binwidth = 1/4)
+```
+
+## Covariation
+
+### A categorical and continuous variable 
+
+```{r}
+ggplot(data = diamonds, mapping = aes(x = price)) + 
+  geom_freqpoly(mapping = aes(colour = cut), binwidth = 500)
+```
+
+```{r, fig.width = "50%", fig.width = 4}
+ggplot(diamonds) + 
+  geom_bar(mapping = aes(x = cut))
+```
+
+```{r}
+ggplot(data = diamonds, mapping = aes(x = price, y = ..density..)) + 
+  geom_freqpoly(mapping = aes(colour = cut), binwidth = 500)
+```
+
+### Boxplots
+
+```{r, echo = FALSE, out.width = "100%"}
+knitr::include_graphics("diagrams/EDA-boxplot.png")
+```
+
+...back to the data...
+
+```{r fig.height = 3}
+ggplot(data = diamonds, mapping = aes(x = cut, y = price)) +
+  geom_boxplot()
+```
+
+```{r}
+ggplot(data = mpg, mapping = aes(x = class, y = hwy)) +
+  geom_boxplot()
+```
+
+
+```{r fig.height = 3}
+ggplot(data = mpg) +
+  geom_boxplot(mapping = aes(x = reorder(class, hwy, FUN = median), y = hwy))
+```
+
+```{r}
+ggplot(data = mpg) +
+  geom_boxplot(mapping = aes(x = reorder(class, hwy, FUN = median), y = hwy)) +
+  coord_flip()
+```
+
+### Two categorical variables
+
+```{r}
+ggplot(data = diamonds) +
+  geom_count(mapping = aes(x = cut, y = color))
+```
+
+```{r}
+diamonds %>% 
+  count(color, cut)
+```
+
+### Two continuous variables
+
+```{r, dev = "png"}
+ggplot(data = diamonds) +
+  geom_point(mapping = aes(x = carat, y = price))
+```
+
+```{r, dev = "png"}
+ggplot(data = diamonds) + 
+  geom_point(mapping = aes(x = carat, y = price), alpha = 1 / 100)
+```
+
+
+  
+## Patterns and models
+
++ Could this pattern be due to coincidence (i.e. random chance)?
+
++ How can you describe the relationship implied by the pattern?
+
++ How strong is the relationship implied by the pattern?
+
++ What other variables might affect the relationship?
+
++ Does the relationship change if you look at individual subgroups of the data?
+
+
+```{r fig.height = 2}
+ggplot(data = faithful) + 
+  geom_point(mapping = aes(x = eruptions, y = waiting))
+``` 
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,256 @@
+---
+title: "Session 1"
+output:
+  html_document
+---
+
+# Data Transformation
+
+Resource and basis: https://r4ds.had.co.nz/transform.html  
+
+## Data Preparation
+
+- Transforming: filtering, summarising, groupwise calculations
+- Tidying: data into appropriate formats
+- Merging: linking different data sets together
+
+## The tidyverse
+
+```{r echo = FALSE, out.width = "75%"}
+knitr::include_graphics("diagrams/data-science-explore.png")
+```
+
+Install the package
+```{r eval=FALSE, echo=TRUE}
+#this does not run
+install.packages("tidyverse")
+library(tidyverse)
+```
+
+Load the package
+```{r,message=FALSE, warning = FALSE}
+#this runs
+library(tidyverse)
+library(dplyr)
+```
+
+### Gapminder Dataset
+
+```{r}
+gap <- read.csv("data/gapminder-FiveYearData.csv", stringsAsFactors = TRUE)
+head(gap)
+```
+
+## `dplyr`?
+
+1. `select()`: pick variables by their names
+2. `filter()`: pick observations by their values
+3. `group_by()`: change scope of the dataset
+4. `summarize()`: collapse many values into a single summary
+5. `mutate()`: create new variables as functions of existing variables
+6. `arrange()`: re-order rows.
+
+*Functions take arguments:*
+
+function(argument1, argument2, argument3, ...)
+
+First argument: the data
+Next arguments: options
+Ouput of a dplyr function is a new data frame
+
+dataframe --> function --> dataframe
+
+## `dplyr` Functions
+
+### Select Columns with `select`
+
+```{r}
+year_country_gdp <- select(gap, year, country, gdpPercap)
+
+head(year_country_gdp)
+```
+
+### The Pipe
+
+```{r eval=F}
+# NOT run
+cupcakes <- bake(pour(mix(ingredients)))
+```
+
+```{r, eval = F}
+## NOT run
+batter <- mix(ingredients)
+muffin_tin <- pour(batter)
+cupcakes <- bake(muffin_tin)
+```
+
+
+```{r, eval=F}
+## NOT run
+cupcakes <- ingredients %>% 
+  mix() %>% 
+  pour() %>% 
+  bake()
+```
+
+#### `select` & Pipe (`%>%`) {-}
+
+```{r}
+#simple pipe
+gap %>% 
+  select(year, country, gdpPercap)
+
+
+#save the output of the pipe with a new variable
+year_country_gdp <- gap %>% 
+  select(year, country, gdpPercap)
+```
+
+```{r}
+head(year_country_gdp)
+```
+
+### Filter Rows with `filter`
+
+```{r}
+year_country_gdp_africa <- gap %>%
+    filter(continent == "Africa") %>%
+    select(year, country, gdpPercap)
+```
+
+```{r}
+head(year_country_gdp_africa)
+```
+
+### Comparisons
+
+Comparison operators: `>`, `>=`, `<`, `<=`, `!=` (not equal), and `==` (equal). 
+
+### Missing values
+
+```{r}
+NA > 5
+10 == NA
+NA + 10
+NA / 2
+```
+
+```{r eval=FALSE, echo=TRUE}
+#not run
+is.na(x)
+```
+
+### Calculate Across Groups with `group_by`
+
+```{r}
+mean(gap$gdpPercap[gap$continent == "Africa"])
+mean(gap$gdpPercap[gap$continent == "Americas"])
+mean(gap$gdpPercap[gap$continent == "Asia"])
+mean(gap$gdpPercap[gap$continent == "Europe"])
+mean(gap$gdpPercap[gap$continent == "Oceania"])
+```
+
+#### split-apply-combine {-}
+
+```{r}
+knitr::include_graphics(path = "diagrams/splitapply.png")
+```
+
+
+#### `group_by`{-}
+
+```{r}
+knitr::include_graphics(path = "diagrams/dplyr-fig2.png")
+```
+
+### Summarize Across Groups with `summarize`
+
+```{r}
+gdp_bycontinents <- gap %>%
+    group_by(continent) %>%
+    summarize(mean_gdpPercap = mean(gdpPercap))
+
+gdp_bycontinents
+```
+
+```{r}
+knitr::include_graphics(path = "diagrams/dplyr-fig3.png")
+```
+
+```{r}
+gdp_bycontinents_byyear <- gap %>%
+    group_by(continent, year) %>%
+    summarize(mean_gdpPercap = mean(gdpPercap))
+
+gdp_bycontinents_byyear
+```
+
+
+```{r}
+gdp_pop_bycontinents_byyear <- gap %>%
+    group_by(continent, year) %>%
+    summarize(mean_gdpPercap = mean(gdpPercap),
+              sd_gdpPercap = sd(gdpPercap),
+              mean_pop = mean(pop),
+              sd_pop = sd(pop))
+
+gdp_pop_bycontinents_byyear
+```
+
+### Add New Variables with `mutate`
+
+```{r}
+gapminder_with_extra_vars <- gap %>%
+    group_by(continent, year) %>%
+    mutate(mean_gdpPercap = mean(gdpPercap),
+              sd_gdpPercap = sd(gdpPercap),
+              mean_pop = mean(pop),
+              sd_pop = sd(pop))
+
+gapminder_with_extra_vars
+```
+
+```{r}
+gdp_pop_bycontinents_byyear <- gap %>%
+    mutate(gdp_billion = gdpPercap*pop/10^9) %>%
+    group_by(continent, year) %>%
+    summarize(mean_gdpPercap = mean(gdpPercap),
+              sd_gdpPercap = sd(gdpPercap),
+              mean_pop = mean(pop),
+              sd_pop = sd(pop),
+              mean_gdp_billion = mean(gdp_billion),
+              sd_gdp_billion = sd(gdp_billion))
+
+gdp_pop_bycontinents_byyear
+```
+
+### Arrange Rows with `arrange`
+
+```{r}
+gapminder_with_extra_vars <- gap %>%
+    group_by(continent, year) %>%
+    mutate(mean_gdpPercap = mean(gdpPercap),
+              sd_gdpPercap = sd(gdpPercap),
+              mean_pop = mean(pop),
+              sd_pop = sd(pop)) %>%
+    arrange(desc(year), continent)
+
+gapminder_with_extra_vars
+```
+
+# Reading
+
+- R4ds (chapter 5): https://r4ds.had.co.nz/transform.html 
+
+
+
+
+
+
+
+
+
+
+
+
+

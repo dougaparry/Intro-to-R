@@ -1,0 +1,553 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+# Data Types
+
+Resource and basis: 
+- https://r4ds.had.co.nz/strings.html
+- https://r4ds.had.co.nz/factors.html
+- https://r4ds.had.co.nz/dates-and-times.html
+- https://r4ds.had.co.nz/vectors.html 
+
+```{r setup, message = FALSE}
+library(tidyverse)
+```
+
+# Strings
+
+## String basics
+
+```{r}
+string1 <- "This is a string"
+string2 <- 'If I want to include a "quote" inside a string, I use single quotes'
+```
+
+```{r}
+double_quote <- "\"" # or '"'
+single_quote <- '\'' # or "'"
+```
+
+```{r}
+x <- "\u00b5"
+x
+```
+
+### String length
+
+```{r}
+str_length(c("a", "R for data science", NA))
+str_length("Doug")
+```
+
+```{r, echo = FALSE}
+knitr::include_graphics("diagrams/stringr-autocomplete.png")
+```
+
+### Combining strings
+
+```{r}
+test<- str_c("x", "y", "z")
+test
+```
+
+```{r}
+str_c("x", "y", sep = ", ")
+```
+
+### Subsetting strings
+
+```{r}
+x <- c("Apple", "Banana", "Pear")
+
+str_sub("Douglas", 1, 4)
+
+# negative numbers count backwards from end
+str_sub(x, -3, -1)
+```
+
+## Matching patterns with regular expressions
+
+### Basic matches
+
+```{r}
+x <- c("apple", "banana", "pear")
+str_view(x, "an")
+```
+
+
+```{r}
+str_view(x, ".a.")
+```
+
+```{r}
+# To create the regular expression, we need \\
+dot <- "\\."
+
+# But the expression itself only contains one:
+writeLines(dot)
+
+# And this tells R to look for an explicit .
+str_view(c("abc", "a.c", "bef"), "a\\.c")
+```
+
+### Anchors
+
+* `^` to match the start of the string.
+* `$` to match the end of the string.
+
+```{r}
+x <- c("apple", "banana", "pear")
+str_view(x, "^a")
+str_view(x, "a$")
+```
+
+Complete String
+```{r}
+x <- c("apple pie", "apple", "apple cake")
+str_view(x, "apple")
+str_view(x, "^apple$")
+```
+
+### Character classes 
+
+* `\d`: matches any digit.
+* `\s`: matches any whitespace (e.g. space, tab, newline).
+* `[abc]`: matches a, b, or c.
+* `[^abc]`: matches anything except a, b, or c.
+
+### Repetition
+
+* `?`: 0 or 1
+* `+`: 1 or more
+* `*`: 0 or more
+
+```{r}
+x <- "1888 is the longest year in Roman numerals: MDCCCLXXXVIII"
+str_view(x, "CC?")
+str_view(x, "CC+")
+str_view(x, 'C[LX]+')
+```
+
+* `{n}`: exactly n
+* `{n,}`: n or more
+* `{,m}`: at most m
+* `{n,m}`: between n and m
+
+```{r}
+str_view(x, "C{2}")
+str_view(x, "C{2,}")
+str_view(x, "C{2,3}")
+```
+
+## Tools
+
+### Detect matches
+
+```{r}
+x <- c("apple", "banana", "pear")
+str_detect(x, "e")
+```
+
+```{r}
+words[str_detect(words, "x$")]
+str_subset(words, "x$")
+```
+
+```{r}
+df <- tibble(
+  word = words, 
+  i = seq_along(word)
+)
+df %>% 
+  filter(str_detect(word, "x$"))
+```
+
+
+```{r}
+x <- c("apple", "banana", "pear")
+str_count(x, "a")
+
+# On average, how many vowels per word?
+mean(str_count(words, "[aeiou]"))
+```
+
+```{r}
+df %>% 
+  mutate(
+    vowels = str_count(word, "[aeiou]"),
+    consonants = str_count(word, "[^aeiou]")
+  )
+```
+
+### Extract matches
+
+```{r}
+length(sentences)
+head(sentences)
+```
+
+```{r}
+colours <- c("red", "orange", "yellow", "green", "blue", "purple")
+colour_match <- str_c(colours, collapse = "|")
+colour_match
+```
+
+```{r}
+has_colour <- str_subset(sentences, colour_match)
+matches <- str_extract(has_colour, colour_match)
+head(matches)
+```
+
+### Replacing matches
+
+```{r}
+x <- c("apple", "pear", "banana")
+str_replace(x, "[aeiou]", "-")
+str_replace_all(x, "[aeiou]", "-")
+```
+
+```{r}
+x <- c("1 house", "2 cars", "3 people")
+str_replace_all(x, c("1" = "one", "2" = "two", "3" = "three"))
+```
+
+### Splitting
+
+```{r}
+sentences %>%
+  head(5) %>% 
+  str_split(" ")
+```
+
+# Factors
+
+## Creating factors
+
+1. There are only twelve possible months, and there's nothing saving you
+    from typos
+2. It doesn't sort in a useful way
+
+```{r}
+x1 <- c("Dec", "Apr", "Jan", "Mar")
+```
+
+```{r}
+x2 <- c("Dec", "Apr", "Jam", "Mar")
+```
+
+```{r}
+sort(x1)
+```
+
+```{r}
+month_levels <- c(
+  "Jan", "Feb", "Mar", "Apr", "May", "Jun", 
+  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+)
+```
+
+```{r}
+y1 <- factor(x1, levels = month_levels)
+y1
+sort(y1)
+```
+
+## General Social Survey
+
+```{r}
+gss_cat
+```
+
+```{r}
+ggplot(gss_cat, aes(marital)) +
+  geom_bar() +
+  scale_x_discrete(drop = FALSE)
+```
+
+## Modifying factor order
+
+```{r}
+relig_summary <- gss_cat %>%
+  group_by(relig) %>%
+  summarise(
+    age = mean(age, na.rm = TRUE),
+    tvhours = mean(tvhours, na.rm = TRUE),
+    n = n()
+  )
+
+ggplot(relig_summary, aes(tvhours, relig)) + geom_point()
+```
+
+* `f`, the factor whose levels you want to modify.
+* `x`, a numeric vector that you want to use to reorder the levels.
+* Optionally, `fun`, a function that's used if there are multiple values of
+  `x` for each value of `f`. The default value is `median`.
+
+```{r}
+ggplot(relig_summary, aes(tvhours, fct_reorder(relig, tvhours))) +
+  geom_point()
+```
+
+```{r, eval = FALSE}
+relig_summary %>%
+  mutate(relig = fct_reorder(relig, tvhours)) %>%
+  ggplot(aes(tvhours, relig)) +
+    geom_point()
+```
+
+```{r}
+rincome_summary <- gss_cat %>%
+  group_by(rincome) %>%
+  summarise(
+    age = mean(age, na.rm = TRUE),
+    tvhours = mean(tvhours, na.rm = TRUE),
+    n = n()
+  )
+
+ggplot(rincome_summary, aes(age, fct_reorder(rincome, age))) + geom_point()
+```
+
+```{r}
+gss_cat %>%
+  mutate(marital = marital %>% 
+           fct_infreq() %>% 
+           fct_rev()) %>%
+  ggplot(aes(marital)) +
+    geom_bar()
+```
+
+## Modifying factor levels
+
+```{r}
+gss_cat %>% count(partyid)
+```
+
+```{r}
+gss_cat %>%
+  mutate(partyid = fct_recode(partyid,
+    "Republican, strong"    = "Strong republican",
+    "Republican, weak"      = "Not str republican",
+    "Independent, near rep" = "Ind,near rep",
+    "Independent, near dem" = "Ind,near dem",
+    "Democrat, weak"        = "Not str democrat",
+    "Democrat, strong"      = "Strong democrat"
+  )) %>%
+  count(partyid)
+```
+
+
+```{r}
+gss_cat %>%
+  mutate(partyid = fct_recode(partyid,
+    "Republican, strong"    = "Strong republican",
+    "Republican, weak"      = "Not str republican",
+    "Independent, near rep" = "Ind,near rep",
+    "Independent, near dem" = "Ind,near dem",
+    "Democrat, weak"        = "Not str democrat",
+    "Democrat, strong"      = "Strong democrat",
+    "Other"                 = "No answer",
+    "Other"                 = "Don't know",
+    "Other"                 = "Other party"
+  )) %>%
+  count(partyid)
+```
+
+# Dates and times
+
+* Does every year have 365 days?
+* Does every day have 24 hours?
+* Does every minute have 60 seconds?
+
+```{r dates_setup, message = FALSE}
+library(lubridate)
+library(nycflights13)
+```
+
+## Creating date/times
+
+* A __date__. Tibbles print this as `<date>`.
+
+* A __time__ within a day. Tibbles print this as `<time>`.
+
+* A __date-time__ is a date plus a time: it uniquely identifies an
+  instant in time (typically to the nearest second). Tibbles print this
+  as `<dttm>`. 
+  
+```{r}
+today()
+now()
+```
+
+* From a string.
+* From individual date-time components.
+* From an existing date/time object.
+
+### From strings
+
+```{r}
+ymd("2017-01-31")
+mdy("January 31st, 2017")
+dmy("31-Jan-2017")
+```
+
+```{r}
+ymd(20170131)
+```
+
+```{r}
+ymd_hms("2017-01-31 20:11:59")
+mdy_hm("01/31/2017 08:01")
+```
+
+### From individual components
+
+```{r}
+flights %>% 
+  select(year, month, day, hour, minute)
+```
+
+```{r}
+flights %>% 
+  select(year, month, day, hour, minute) %>% 
+  mutate(departure = make_datetime(year, month, day, hour, minute))
+```
+
+```{r}
+make_datetime_100 <- function(year, month, day, time) {
+  make_datetime(year, month, day, time %/% 100, time %% 100)
+}
+
+flights_dt <- flights %>% 
+  filter(!is.na(dep_time), !is.na(arr_time)) %>% 
+  mutate(
+    dep_time = make_datetime_100(year, month, day, dep_time),
+    arr_time = make_datetime_100(year, month, day, arr_time),
+    sched_dep_time = make_datetime_100(year, month, day, sched_dep_time),
+    sched_arr_time = make_datetime_100(year, month, day, sched_arr_time)
+  ) %>% 
+  select(origin, dest, ends_with("delay"), ends_with("time"))
+
+flights_dt
+```
+
+With this data, I can visualise the distribution of departure times across the year:
+
+```{r}
+flights_dt %>% 
+  ggplot(aes(dep_time)) + 
+  geom_freqpoly(binwidth = 86400) # 86400 seconds = 1 day
+```
+
+Or within a single day:
+
+```{r}
+flights_dt %>% 
+  filter(dep_time < ymd(20130102)) %>% 
+  ggplot(aes(dep_time)) + 
+  geom_freqpoly(binwidth = 600) # 600 s = 10 minutes
+```
+
+## Date-time components
+
+```{r}
+datetime <- ymd_hms("2016-07-08 12:34:56")
+
+year(datetime)
+month(datetime)
+mday(datetime)
+
+yday(datetime)
+wday(datetime)
+```
+
+```{r}
+month(datetime, label = TRUE)
+wday(datetime, label = TRUE, abbr = FALSE)
+```
+
+```{r}
+flights_dt %>% 
+  mutate(minute = minute(dep_time)) %>% 
+  group_by(minute) %>% 
+  summarise(
+    avg_delay = mean(arr_delay, na.rm = TRUE),
+    n = n()) %>% 
+  ggplot(aes(minute, avg_delay)) +
+    geom_line()
+```
+
+### Setting components
+
+```{r}
+(datetime <- ymd_hms("2016-07-08 12:34:56"))
+
+year(datetime) <- 2020
+datetime
+month(datetime) <- 01
+datetime
+hour(datetime) <- hour(datetime) + 1
+datetime
+```
+
+## Time spans
+
+* __durations__, which represent an exact number of seconds.
+* __periods__, which represent human units like weeks and months.
+
+### Durations
+
+
+```{r}
+# How old is South Africa?
+sa_age <- today() - ymd(19940427)
+sa_age
+```
+
+```{r}
+as.duration(sa_age)
+```
+
+```{r}
+2 * dyears(1)
+dyears(1) + dweeks(12) + dhours(15)
+```
+
+### Periods
+
+```{r}
+10 * (months(6) + days(1))
+days(50) + hours(25) + minutes(2)
+```
+
+```{r}
+# A leap year
+ymd("2016-01-01") + dyears(1)
+ymd("2016-01-01") + years(1)
+```
+
+
+Reading: 
+
+R4ds: Chapters 14, 15, 16, 20
+
+- https://r4ds.had.co.nz/strings.html
+- https://r4ds.had.co.nz/factors.html
+- https://r4ds.had.co.nz/dates-and-times.html
+- https://r4ds.had.co.nz/vectors.html 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

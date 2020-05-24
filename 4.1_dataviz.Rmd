@@ -1,0 +1,441 @@
+---
+title: "Session 4"
+output: html_notebook
+---
+
+# Data Visualisation
+
+### (re)Sources
+
+```{r echo = F, fig.align = 'center'}
+knitr::include_graphics(path = "diagrams/dataviz.png")
+```
+
+### Why visualise data?
+
+- *understand*, explore
+- *communicate*, explain, demonstrate
+
+### Anscombe's quartet
+
+```{r echo = F, fig.align = 'center'}
+knitr::include_graphics(path = "diagrams/anscombe.png")
+```
+
+## ggplot2
+
+Setup:
+
+```{r message=FALSE, warning=FALSE}
+library(tidyverse)
+library(ggplot2)
+```
+
+“The Layered Grammar of Graphics”
+
+http://vita.had.co.nz/papers/layered-grammar.pdf.
+
+#### Why `ggplot`? {-}
+
+* More elegant & compact code than R base graphics 
+* Very powerful for exploratory data analysis
+* Follows a grammar, just like any language.
+* It defines basic components that make up a sentence.
+
+### Grammar
+
+The general call for `ggplot2` looks like this:
+  
+```{r, eval=FALSE}
+# Not run
+ggplot(data=, aes(x=, y=), color=, size=,) + geom_xxxx()+geom_yyyy()
+```
+
+The *grammar* involves some basic components:
+
+1. **Data**: a data.frame
+2. **Aes**thetics: How your data are represented visually, aka its "mapping". Which variables are shown on x, y axes, as well as color, size, shape, etc.
+3. **Geom**etry: The geometric objects in a plot -- points, lines, polygons, etc.
+The key to understanding `ggplot2` is thinking about a figure in layers: just like you might do in an image editing program like Photoshop, Illustrator, or Inkscape. 
+
+```{r}
+gap <- read.csv("data/gapminder-FiveYearData.csv", stringsAsFactors = F)
+```
+
+
+```{r}
+ggplot(data = gap, aes(y = gdpPercap, x = lifeExp)) +
+  geom_point()
+```
+
+## Aesthetic mappings
+
+1. tidy data
+2. a mapping
+3. geometric layers
+4. co-ordinates
+5. scales
+6. labels and guides
+
+- Aesthetic mappings relate variables in your data to points, colours, shapes etc. in the figure.
+- Step 1. tell ggplot what the data is
+- Step 2. tell ggplot how the variables map to the plot's aesthetics
+- Step 3. tell ggplot what kind of plot you want to make with the data and the mappings
+
+## Basic template
+
+```{r, eval=FALSE, echo=TRUE}
+#THIS WON'T RUN
+plot <- ggplot(data = <data>,
+               mapping = aes(<aesthetic> = <variable>,
+                             <aesthetic> = <variable>...)) + 
+  geom_<type>(<...>) + 
+  scale_<mapping>_<type>(<...>) +
+  coord_<type>(<...>) +
+  labs(<...>) +
+  theme()
+
+```
+
+## Our first plot
+
+```{r, echo=TRUE}
+plot <- ggplot(data=gap)
+
+# OR
+  
+plot <- gap %>% 
+  ggplot()
+```
+
+## Adding the mappings
+
+```{r, echo=TRUE}
+plot<-ggplot(data=gap, 
+          mapping = aes(x=gdpPercap, y=lifeExp))
+
+```
+
+## Adding a geom
+
+```{r plot1, echo=TRUE, eval=FALSE}
+plot<-ggplot(data=gap, 
+          mapping = aes(x=gdpPercap, y=lifeExp)) +
+  geom_point()
+```
+
+## The output
+
+```{r echo=FALSE, eval=TRUE}
+plot<-ggplot(data=gap, 
+          mapping = aes(x=gdpPercap, y=lifeExp)) +
+  geom_point()
+
+plot
+```
+
+## ggplot: layer by layer
+
+- tell ggplot() what the data is
+- tell ggplot() what relationships we want to see
+- tell ggplot() how we want to see the relationships
+- layer other geoms as needed
+- use additional functions to adjust labels, scales, and other details
+
+## Smooth line code
+
+```{r, echo=TRUE, eval=FALSE}
+plot<-ggplot(data=gap, 
+          mapping = aes(x=gdpPercap, y=lifeExp)) +
+  geom_point() + 
+  geom_smooth()
+
+plot
+```
+
+## linear model smooth
+
+```{r, echo=TRUE, eval=FALSE}
+plot<-ggplot(data=gap, 
+          mapping = aes(x=gdpPercap, y=lifeExp)) +
+  geom_point() + 
+  geom_smooth(method="lm")
+
+plot
+```
+
+## Changing the x-axis scale
+
+```{r, echo=TRUE, eval=FALSE}
+plot<-ggplot(data=gap, 
+          mapping = aes(x=gdpPercap, y=lifeExp)) +
+  geom_point() + 
+  geom_smooth() +
+  scale_x_log10() 
+plot
+```
+
+
+## Changing the x-axis scale representation
+
+```{r, echo=TRUE, eval=FALSE}
+plot<-ggplot(data=gap, 
+          mapping = aes(x=gdpPercap, y=lifeExp)) +
+  geom_point() + 
+  geom_smooth() +
+  scale_x_log10(labels=scales::dollar)
+
+plot
+```
+
+## trying to set the color
+
+```{r, echo=TRUE, eval=FALSE}
+plot<-ggplot(data=gap, 
+          mapping = aes(x=gdpPercap, 
+                        y=lifeExp, 
+                        color=continent)) +
+  geom_point() +
+  scale_x_log10(labels=scales::dollar)
+
+plot
+```
+
+
+## Changing point colours
+
+```{r, echo=TRUE, eval=FALSE}
+plot<-ggplot(data=gap, 
+          mapping = aes(x=gdpPercap, 
+                        y=lifeExp)) +
+  geom_point(color="purple", alpha=0.3) +
+  geom_smooth(method="loess") + 
+  scale_x_log10(labels=scales::dollar)
+
+plot
+```
+
+## More command methods
+```{r, echo=TRUE, eval=FALSE}
+plot<-ggplot(data=gap, 
+          mapping = aes(x=gdpPercap, 
+                        y=lifeExp, 
+                        color=continent)) +
+  geom_point(alpha=0.3) +
+  geom_smooth(method="lm", 
+              se=FALSE, 
+              color="orange", 
+              size=3) + 
+  scale_x_log10(labels=scales::dollar)
+
+plot
+```
+
+## Adding labels
+
+```{r eval=TRUE, echo=FALSE, message=FALSE, warning=FALSE}
+plot<-ggplot(data=gap, 
+          mapping = aes(x=gdpPercap, 
+                        y=lifeExp, 
+                        color=continent)) +
+  geom_point(alpha=0.3) +
+  geom_smooth(method="gam", se=FALSE) + 
+  scale_x_log10(labels=scales::dollar) + 
+  labs(x= "GDP Per Capita",
+       y = "Life Expectancy In Years",
+       title="Economic Growth And Life Expectancy",
+       subtitle="Data points represent country-years",
+       caption="Source: Gapminder.") + 
+  theme_minimal() + 
+  theme(legend.position = "bottom",
+        panel.grid.minor.x = element_blank(),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.title = element_text(face = "bold", size = rel(1.5)),
+        plot.subtitle = element_text(color = "grey60"),
+        plot.caption = element_text(color = "grey60"),
+        panel.border = element_blank(),
+        panel.grid.minor = element_blank(),
+        axis.line = element_line(colour = "black"))
+
+plot
+```
+
+## specific mappings
+```{r eval=FALSE, echo=TRUE, message=FALSE}
+plot<-ggplot(data=gap, 
+          mapping = aes(x=gdpPercap, 
+                        y=lifeExp)) +
+  geom_point(alpha=0.3, 
+             aes(color=continent)) +
+  geom_smooth(method="gam", 
+              color="black") + 
+  scale_x_log10(labels=scales::dollar) + 
+  scale_y_continuous(breaks = seq(0,100,10), limits = c(0,100)) +
+  labs(x= "GDP Per Capita",
+       y = "Life Expectancy In Years",
+       title="Economic Growth And Life Expectancy",
+       subtitle="Data points represent country-years",
+       caption="Source: Gapminder.") +   
+  theme_minimal() + 
+  theme(legend.position = "bottom",
+        panel.grid.minor.x = element_blank(),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.title = element_text(face = "bold", size = rel(1.5)),
+        plot.subtitle = element_text(color = "grey60"),
+        plot.caption = element_text(color = "grey60"),
+        panel.border = element_blank(),
+        panel.grid.minor = element_blank(),
+        axis.line = element_line(colour = "black"))
+
+plot
+```
+
+## Grouped data and line charts
+```{r, echo=TRUE, eval=FALSE}
+plot<-ggplot(data=gap, 
+          mapping = aes(x=year, 
+                        y=gdpPercap)) +
+  geom_line(aes(group=country))
+  
+plot
+```
+
+## Facet wrapping a plot
+```{r eval=FALSE, echo=TRUE, message=FALSE}
+plot<-ggplot(data=gap, 
+          mapping = aes(x=year, 
+                        y=gdpPercap)) +
+  geom_line(aes(group=country)) +
+  geom_smooth(size = 1.1, method="loess", se=FALSE) +
+  facet_wrap(~continent) +
+  labs(x="Year", 
+       y="GDP per capita", 
+       title="GDP per capita on Five continents")
+  
+plot
+```
+
+## Scales, Guides, Themes
+
+- scales = the x and y axis scales (scale_ functions)
+- guides = the legends for the scales (guides() function)
+- themes = all other visual elements of a figure
+
+## Other interesting plots in ggplot
+
+**bar plots**
+
+```{r}
+# with color representing regions
+ggplot(data = gap, aes(x = lifeExp, fill = continent)) + 
+  geom_bar(stat="bin")
+```
+
+**box plots**
+
+```{r}
+ggplot(data = gap, aes(x = continent, y = lifeExp)) + 
+  geom_boxplot()
+```
+
+## ggpol
+
+```{r, warning=FALSE, message=FALSE, echo=FALSE, eval=TRUE}
+library("ggpol")
+
+SA_Parliament <- data.frame(
+ Parties = factor(c("ANC", "DA", "EFF", "IFP", "FF+", 
+                    "ACDP", "UDM","ATM", "GOOD", "NFP", "
+                    AIC", "COPE", "PAC", "ALJAM"),
+                  levels = c("ANC", "DA", "EFF", "IFP", 
+                             "FF+", "ACDP", "UDM","ATM", 
+                             "GOOD", "NFP", "AIC", "COPE", 
+                             "PAC", "ALJAM")),
+ seats   = c(230,84,44,14,10,4,2,2,2,2,2,2,1,1),
+ colors  = c("#F0C445", "#20599D", "#EB3325", "#54A870", 
+             "#EE6F23","#429DD9", "#FBDE4B", "#6D6E70", "#010101", 
+             "#FFFB59", "#28328E", "#B02D30", "#2A6118", "#FFFFFF"),
+ stringsAsFactors = FALSE)
+
+ggplot(SA_Parliament) + 
+  geom_parliament(aes(seats = seats, fill = Parties), color = "black") + 
+  scale_fill_manual(values = SA_Parliament$colors, labels = SA_Parliament$Parties) +
+  coord_fixed() + 
+  theme_void() + 
+  labs(title="South African Parlimantary Elections 2019") + 
+  theme(legend.position="bottom", 
+        plot.title = element_text(hjust = 0.5),
+        title=element_text(size=13, face="bold", hjust=0.5),
+        legend.spacing.x = unit(0.5, 'cm'),
+        legend.key = element_rect(color = NA, fill = NA),
+        legend.key.size = unit(1.2, 'lines'))
+```
+
+
+## GGPubr
+
+```{r, eval=TRUE, echo=FALSE}
+data("ToothGrowth")
+df <- ToothGrowth
+
+data("mtcars")
+dfm <- mtcars
+dfm$cyl <- as.factor(dfm$cyl)
+# Add the name colums
+dfm$name <- rownames(dfm)
+```
+
+```{r, echo=FALSE, eval=TRUE,  message=FALSE, warning=FALSE}
+library(ggpubr)
+
+p <- ggboxplot(df, x = "dose", y = "len",
+                color = "dose", 
+               palette =c("#00AFBB", "#E7B800", "#FC4E07"),
+                add = "jitter", 
+               shape = "dose")
+
+my_comparisons <- list( c("0.5", "1"), c("1", "2"), c("0.5", "2") )
+
+p + stat_compare_means(comparisons = my_comparisons)+ 
+  stat_compare_means(label.y = 50)    
+
+```
+
+## GGPubr
+
+```{r eval=TRUE, echo=FALSE, message=FALSE, warning=FALSE}
+ggviolin(df, x = "dose", y = "len", fill = "dose",
+         palette = c("#00AFBB", "#E7B800", "#FC4E07"),
+         add = "boxplot", add.params = list(fill = "white"))+
+  stat_compare_means(comparisons = my_comparisons, label = "p.signif")+ 
+  stat_compare_means(label.y = 50)    
+```
+
+
+## Where to next - resources?
+
+workshop: https://www.youtube.com/watch?v=h29g21z0a68 
+
+https://www.rstudio.com/wp-content/uploads/2015/03/ggplot2-cheatsheet.pdf
+
+http://r-statistics.co/Top50-Ggplot2-Visualizations-MasterList-R-Code.html
+
+http://www.cookbook-r.com/Graphs/#graphs-with-ggplot2
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Exercises
+
