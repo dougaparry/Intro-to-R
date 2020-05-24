@@ -5,7 +5,7 @@ To access either clone the repository or (recommended) download to your desktop 
 
 The sessions are built around the book R 4 Data Science (https://r4ds.had.co.nz) by Hadley Wickham.
 
-## 5 Lessons with assoociated code, data, and videos
+## 5 Lessons with associated code, data, and videos
 
 - 1.3_transform.Rmd
 - 2.1_data_intro.Rmd
