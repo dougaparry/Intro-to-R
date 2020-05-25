@@ -17,7 +17,5 @@ Each lesson is linked below (download the entire project to access all lessons a
 - [4.1_dataviz.Rmd](https://github.com/dougaparry/Intro-to-R/blob/master/4.1_dataviz.Rmd) ([session video](https://youtu.be/RpTeOej_jAI))
   - [Fundamentals of data visualistion](https://serialmentor.com/dataviz/) (theory)
   - [Data Visualisation A practical introduction](https://socviz.co) (practical)
-- [5.1_exploration_iteration.Rmd](https://github.com/dougaparry/Intro-to-R/blob/master/5.1_exploration_iteration.Rmd)
-  - R4ds chapters: 21, 7
 
 
