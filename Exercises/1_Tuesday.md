@@ -13,7 +13,7 @@ __Exercises:__
     4. Departed in Winter (July, August, and September)
     5. Arrived more than two hours late, but didn’t leave late
 2. How many flights have a missing dep_time? What other variables are missing? What might these rows represent?
-3. How could you use arrange() to sort all missing values to the start? (Hint: use is.na()).
+3. How could you use `arrange()` to sort all missing values to the start? (Hint: use is.na()).
 4. Sort flights to find the most delayed flights. Find the flights that left earliest.
 5. Which flights travelled the farthest? Which travelled the shortest?
 6. What happens if you include the name of a variable multiple times in a select() call?
