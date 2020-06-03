@@ -13,14 +13,14 @@ __Exercises:__
     4. Departed in Winter (July, August, and September)
     5. Arrived more than two hours late, but didn’t leave late
 2. How many flights have a missing dep_time? What other variables are missing? What might these rows represent?
-3. How could you use `arrange()` to sort all missing values to the start? (Hint: use is.na()).
+3. How could you use `arrange()` to sort all missing values to the start? (Hint: use `is.na()`).
 4. Sort flights to find the most delayed flights. Find the flights that left earliest.
 5. Which flights travelled the farthest? Which travelled the shortest?
-6. What happens if you include the name of a variable multiple times in a select() call?
-7. Currently dep_time and sched_dep_time are convenient to look at, but hard to compute with because they’re not really continuous numbers. Convert them to a more convenient representation of number of minutes since midnight.
-8. Compare air_time with arr_time - dep_time. What do you expect to see? What do you see? What do you need to do to fix it?
+6. What happens if you include the name of a variable multiple times in a `select()` call?
+7. Currently `dep_time` and `sched_dep_time` are convenient to look at, but hard to compute with because they’re not really continuous numbers. Convert them to a more convenient representation of number of minutes since midnight.
+8. Compare `air_time` with `arr_time` - `dep_time`. What do you expect to see? What do you see? What do you need to do to fix it?
 9. Look at the number of cancelled flights per day. Is there a pattern? Is the proportion of cancelled flights related to the average delay?
-10. What does the sort argument to count() do. When might you use it?
+10. What does the `sort` argument to `count()` do. When might you use it?
 11. Which plane (tailnum) has the worst on-time record?
 12. What time of day should you fly if you want to avoid delays as much as possible?
 13. For each destination, compute the total minutes of delay. For each flight, compute the proportion of the total delay for its destination.
