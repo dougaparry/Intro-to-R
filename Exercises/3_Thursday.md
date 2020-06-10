@@ -23,5 +23,4 @@ Exercises:
 5. Use the built in General Social Survey (GSS) described in the video
     1. What is the most common relig in this survey? What’s the most common partyid?
     2. Which relig does denom (denomination) apply to? How can you find out with a table?
-6. What does `mean(is.na(x))` tell you about a vector x? What about `sum(!is.finite(x))`?
 
