@@ -1,0 +1,117 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+# Set up and load relevant packages
+
+```{r setup}
+if (!require("pacman")) install.packages("pacman"); 
+library(pacman)
+pacman::p_load(tidyverse, dplyr, nycflights13)
+
+#pacman installs a package before loading it if it is not already installed
+```
+
+Make a scatterplot of hwy vs cyl.
+
+```{r}
+ggplot(mpg, aes(x = hwy, y = cyl)) +
+  geom_point()
+```
+
+What happens if you make a scatterplot of class vs drv? Why is the plot not useful? What happens if you use geom_count() instead?
+
+```{r}
+ggplot(mpg, aes(x = class, y = drv)) +
+  geom_point()
+
+ggplot(mpg, aes(x = class, y = drv)) +
+  geom_count()
+```
+
+What’s gone wrong with this code? Why are the points not blue?
+
+```{r}
+ggplot(data = mpg) + geom_point(mapping = aes(x = displ, y = hwy, color = "blue"))
+```
+
+```{r}
+#The argument colour = "blue" is included within the mapping argument, and as such, it is treated as an aesthetic, which is a mapping between a variable and a value. In the expression, colour = "blue", "blue" is interpreted as a categorical variable which only takes a single value "blue".
+
+#The following code produces the expected result.
+ggplot(data = mpg) +
+  geom_point(mapping = aes(x = displ, y = hwy), colour = "blue")
+```
+
+
+Map a continuous variable to color, size, and shape. How do these aesthetics behave differently for categorical vs. continuous variables?
+
+```{r}
+ggplot(mpg, aes(x = displ, y = hwy, colour = cty)) +
+  geom_point()
+```
+
+What happens if you map the same variable to multiple aesthetics?
+
+```{r}
+ggplot(mpg, aes(x = displ, y = hwy, colour = hwy, size = displ)) +
+  geom_point()
+```
+
+```{r}
+#The code works and produces a plot, even if it is a bad one. Mapping a single variable to multiple aesthetics is redundant. Because it is redundant information, in most cases avoid mapping a single variable to multiple aesthetics.
+```
+
+
+What does the stroke aesthetic do? What shapes does it work with? (Hint: use ?geom_point)
+
+```{r}
+
+```
+
+What happens if you map an aesthetic to something other than a variable name, like aes(colour = displ < 5)? Note, you’ll also need to specify x and y.
+
+```{r}
+
+```
+
+
+What plots does the following code make? What does . do?
+
+```{r}
+ggplot(data = mpg) + geom_point(mapping = aes(x = displ, y = hwy)) + facet_grid(drv ~ .)
+```
+
+
+
+Run this code in your head and predict what the output will look like. Then, run the code in R and check your predictions.
+
+```{r}
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy, color = drv)) + geom_point() + geom_smooth(se = FALSE)
+```
+
+What does the se argument to geom_smooth() do?
+
+```{r}
+
+```
+
+What is the default geom associated with stat_summary()?
+
+```{r}
+
+```
+
+What does geom_col() do? How is it different to geom_bar()?
+
+```{r}
+
+```
+
+Create one plot on the fuel economy data with customized title, subtitle, caption, x, y, and colour labels.
+
+```{r}
+
+```
+

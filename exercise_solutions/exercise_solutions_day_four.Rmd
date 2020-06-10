@@ -1,0 +1,102 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+# Set up and load relevant packages
+
+```{r setup}
+if (!require("pacman")) install.packages("pacman"); 
+library(pacman)
+pacman::p_load(tidyverse, dplyr, nycflights13)
+
+#pacman installs a package before loading it if it is not already installed
+```
+
+In code that doesn’t use stringr, you’ll often see paste() and paste0(). What’s the difference between the two functions? What stringr function are they equivalent to? How do the functions differ in their handling of NA?
+
+```{r}
+# The function paste() separates strings by spaces by default, while paste0() does not separate strings with spaces by default.
+```
+
+Use str_length() and str_sub() to extract the middle character from a string. What will you do if the string has an even number of characters?
+```{r}
+length <- str_length(test_string)
+mid <- ceiling(length/2)
+
+test_string_1 <- "abc"
+test_string_2 <- "abcd"
+str_sub(test_string_1, mid, mid)
+str_sub(test_string_2, mid, mid)
+```
+
+What does str_trim() do? What’s the opposite of str_trim()?
+
+```{r}
+# The function str_trim() trims the whitespace from a string
+# The opposite of str_trim() is str_pad() which adds characters to each side.
+```
+
+Given the corpus of common words in stringr::words, create regular expressions that find all words that:
+Start with “y”.
+```{r}
+str_view(stringr::words, "^y", match = TRUE)
+```
+
+End with “x”
+```{r}
+str_view(stringr::words, "x$", match = TRUE)
+```
+
+Are exactly three letters long. (Don’t cheat by using str_length()!)
+```{r}
+str_view(stringr::words, "^...$", match = TRUE)
+```
+
+Have seven letters or more.
+```{r}
+str_view(stringr::words, ".......", match = TRUE)
+#OR
+str_view(stringr::words, "^.{7,}", match = TRUE)
+```
+
+Start with three consonants.
+```{r}
+str_view(words, "^[^aeiou]{3}", match = TRUE)
+```
+
+Have three or more vowels in a row.
+```{r}
+str_view(words, "[aeiou]{3,}", match = TRUE)
+```
+
+Have two or more vowel-consonant pairs in a row.
+```{r}
+str_view(words, "([aeiou][^aeiou]){2,}", match = TRUE)
+```
+
+Use the built in General Social Survey (GSS) described in the video
+
+What is the most common relig in this survey? What’s the most common partyid?
+```{r}
+gss_cat %>%
+  count(relig) %>%
+  arrange(desc(n))
+
+gss_cat %>%
+  count(partyid) %>%
+  arrange(desc(n)) 
+```
+
+Which relig does denom (denomination) apply to? How can you find out with a table?
+```{r}
+levels(gss_cat$denom)
+
+gss_cat %>%
+  filter(!denom %in% c(
+    "No answer", "Other", "Don't know", "Not applicable",
+    "No denomination"
+  )) %>%
+  count(relig)
+```
+
