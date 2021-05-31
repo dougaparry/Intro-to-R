@@ -16,18 +16,20 @@ pacman::p_load(tidyverse, dplyr, nycflights13)
 In code that doesn’t use stringr, you’ll often see paste() and paste0(). What’s the difference between the two functions? What stringr function are they equivalent to? How do the functions differ in their handling of NA?
 
 ```{r}
-# The function paste() separates strings by spaces by default, while paste0() does not separate strings with spaces by default.
+# The function paste() separates strings by spaces by default, while paste0() does not separate strings with spaces by default. Since str_c() does not separate strings with spaces by default it is closer in behavior to paste0(). However, str_c() and the paste function handle NA differently. The function str_c() propagates NA, if any argument is a missing value, it returns a missing value. This is in line with how the numeric R functions, e.g. sum(), mean(), handle missing values. However, the paste functions, convert NA to the string "NA" and then treat it as any other character vector.
 ```
 
 Use str_length() and str_sub() to extract the middle character from a string. What will you do if the string has an even number of characters?
-```{r}
-length <- str_length(test_string)
-mid <- ceiling(length/2)
 
-test_string_1 <- "abc"
-test_string_2 <- "abcd"
-str_sub(test_string_1, mid, mid)
-str_sub(test_string_2, mid, mid)
+```{r}
+x <- c("a", "abc", "abcd", "abcde", "abcdef")
+
+L <- str_length(x)
+m <- ceiling(L / 2)
+
+str_sub(x, m, m)
+
+#If the string has an even number of characters the choice is arbitrary. We choose to select n/2 because that case works even if the string is only of length one. A more general method would allow the user to select either the floor or ceiling for the middle character of an even string.
 ```
 
 What does str_trim() do? What’s the opposite of str_trim()?
@@ -77,7 +79,7 @@ str_view(words, "([aeiou][^aeiou]){2,}", match = TRUE)
 
 Use the built in General Social Survey (GSS) described in the video
 
-What is the most common relig in this survey? What’s the most common partyid?
+What is the most common religion in this survey? What’s the most common partyid?
 ```{r}
 gss_cat %>%
   count(relig) %>%
@@ -88,7 +90,7 @@ gss_cat %>%
   arrange(desc(n)) 
 ```
 
-Which relig does denom (denomination) apply to? How can you find out with a table?
+Which religion does denom (denomination) apply to? How can you find out with a table?
 ```{r}
 levels(gss_cat$denom)
 
