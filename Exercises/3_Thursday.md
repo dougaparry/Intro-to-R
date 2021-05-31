@@ -1,6 +1,6 @@
 # Thursday Exercises
 
-This session is based around chapters 14, 15, 16, and 20 of R 4 Data Science. It is important that you work through the chapters completely to understand all of the important concepts (both those covered in the session and the rest covered in the chapter). Afterwards, we have extracted a number of relevant exercises from the chapter to work through. For these exercises you can use the provided notebooks and data at: https://github.com/dougaparry/Intro-to-R to get started (download the full repo as a zip file). While the solutions for the exercises can be found on the Internet, we encourage you to work through the exercises using the chapter first to get used to solving problems with R.
+This session is based around chapters 14, 15, 16, and 20 of the book R 4 Data Science. It is important that you work through the chapters completely to understand all of the important concepts (both those covered in the session and the rest covered in the chapter). Afterwards, we have extracted a number of relevant exercises from the chapter to work through. For these exercises you can use the provided notebooks and data at: https://github.com/dougaparry/Intro-to-R to get started (download the full repo as a zip file). While the solutions for the exercises can be found on the Internet, we encourage you to work through the exercises using the chapter first to get used to solving problems with R.
 
 - Chapter: 14 https://r4ds.had.co.nz/strings.html 
 - Chapter: 15 https://r4ds.had.co.nz/factors.html 
@@ -9,7 +9,7 @@ This session is based around chapters 14, 15, 16, and 20 of R 4 Data Science. It
 
 Exercises:
 
-1. In code that doesn’t use `stringr`, you’ll often see `paste()` and `paste0()`. What’s the difference between the two functions? What stringr function are they equivalent to? How do the functions differ in their handling of NA?
+1. In code that doesn’t use `stringr`, you’ll often see `paste()` and `paste0()`. What’s the difference between the two functions? Which stringr function are they equivalent to? How do the functions differ in their handling of NA?
 2. Use `str_length()` and `str_sub()` to extract the middle character from a string. What will you do if the string has an even number of characters?
 3. What does `str_trim()` do? What’s the opposite of `str_trim()`?
 4. Given the corpus of common words in `stringr::words`, create regular expressions that find all words that:
