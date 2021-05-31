@@ -1,6 +1,6 @@
 # Wednesday Exercises
 
-This session is based around chapters 11, 12, and 13 of R 4 Data Science. It is important that you work through the chapters completely to understand all of the important concepts (both those covered in the session and the rest covered in the chapter). Afterwards, we have extracted a number of relevant exercises from the chapter to work through. For these exercises you can use the provided notebooks and data at: https://github.com/dougaparry/Intro-to-R to get started (download the full repo as a zip file). While the solutions for the exercises can be found on the Internet, we encourage you to work through the exercises using the chapter first to get used to solving problems with R.
+This session is based around chapters 11, 12, and 13 of the book R 4 Data Science. It is important that you work through the chapters completely to understand all of the important concepts (both those covered in the session and the rest covered in the chapter). Afterwards, we have extracted a number of relevant exercises from the chapter to work through. For these exercises you can use the provided notebooks and data at: https://github.com/dougaparry/Intro-to-R to get started (download the full repo as a zip file). While the solutions for the exercises can be found on the Internet, we encourage you to work through the exercises using the chapter first to get used to solving problems with R.
 
 - Chapter: 11 https://r4ds.had.co.nz/data-import.html 
 - Chapter: 12 https://r4ds.had.co.nz/tidy-data.html 
@@ -10,7 +10,7 @@ Exercises:
 
 1. What function would you use to read a file where fields were separated with “|”?
 2. What’s the difference between `read_csv()` and `read_csv2()`?
-3. Use the sample tables from the video (see the workbook linked one GitHub). Compute the rate for `table2`, and `table4a` + `table4b`. You will need to perform four operations:
+3. Use the sample tables from the video (see the workbook linked on GitHub). Compute the rate for `table2`, and `table4a` + `table4b`. You will need to perform four operations:
     1. Extract the number of TB cases per country per year.
     2. Extract the matching population per country per year.
     3. Divide cases by population, and multiply by 10000.
@@ -20,7 +20,7 @@ Exercises:
 
 `preg <- tribble( ~pregnant, ~male, ~female, "yes",     NA,    10, "no",      20,    12)`
 
-6. Use `library("tidyverse") library("nycflights13") library("viridis")`
+6. Use `library("tidyverse") library("nycflights13") library("viridis")` First, read in and explore the flights dataset.
     1. Imagine you wanted to draw (approximately) the route each plane flies from its origin to its destination. What variables would you need? What tables would you need to combine?
     2. Add the location of the origin and destination (i.e. the lat and lon) to flights.
     3. What weather conditions make it more likely to see a delay? (Hint, you’ll need the flights and weather tables)
