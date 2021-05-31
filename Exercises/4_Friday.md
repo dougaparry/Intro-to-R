@@ -26,6 +26,5 @@ Exercises:
 `ggplot(data = mpg, mapping = aes(x = displ, y = hwy, color = drv)) + geom_point() + geom_smooth(se = FALSE)`
 
 10. What does the `se` argument to `geom_smooth()` do?
-11. What is the default geom associated with `stat_summary()`? 
 12. What does `geom_col()` do? How is it different to `geom_bar()`?
 13. Create one plot on the fuel economy data with customized title, subtitle, caption, x, y, and colour labels.
