@@ -1,9 +1,11 @@
 # Intro-to-R
-Data, code, images, and markdown files for an introduction to R.
+Data, code, images, and markdown files for an introduction to programming in R.
 
-To access either clone the repository or (recommended) download to your desktop as a zip file. Unpack this zip file and open `Introduction_to_R.Rproj`. If you have Rstudio installed (if not: https://rstudio.com/products/rstudio/download/) this will open the project in RStudio. Each .Rmd file corresponds to a session. The first lesson is `1.3_transform.Rmd`.
+To access either clone the repository, or (recommended) download to your desktop as a zip file, unpack this zip file and open `Introduction_to_R.Rproj`. If you have Rstudio installed (if not: https://rstudio.com/products/rstudio/download/) this will open the project in RStudio. Each .Rmd file corresponds to a session. The first lesson is `1.3_transform.Rmd`.
 
 The sessions are built around the book R 4 Data Science (https://r4ds.had.co.nz) by Hadley Wickham.
+
+In the folder above there is a folder for .md files for exercises for Tuesday-Friday. Additionally, the solutions for these exercises are also available. 
 
 ## 5 Lessons with associated code, data, and videos
 Each lesson is linked below (download the entire project to access all lessons and datasets)
