@@ -10,7 +10,7 @@ if (!require("pacman")) install.packages("pacman");
 library(pacman)
 pacman::p_load(tidyverse, dplyr, nycflights13)
 
-#pacman installs a package before loading it if it is not already installed
+#pacman installs a package before loading it if it is not already installed.
 ```
 
 Make a scatterplot of hwy vs cyl.
@@ -67,12 +67,20 @@ ggplot(mpg, aes(x = displ, y = hwy, colour = hwy, size = displ)) +
 What does the stroke aesthetic do? What shapes does it work with? (Hint: use ?geom_point)
 
 ```{r}
+# Stroke changes the size of the border for shapes (21-25). These are filled shapes in which the color and size of the border can differ from that of the filled interior of the shape.
+
+ggplot(mtcars, aes(wt, mpg)) +
+  geom_point(shape = 21, colour = "black", fill = "white", size = 5, stroke = 5)
 
 ```
 
 What happens if you map an aesthetic to something other than a variable name, like aes(colour = displ < 5)? Note, you’ll also need to specify x and y.
 
 ```{r}
+ggplot(mpg, aes(x = displ, y = hwy, colour = displ < 5)) +
+  geom_point()
+  
+# Aesthetics can also be mapped to expressions like displ < 5. The ggplot() function behaves as if a temporary variable was added to the data with values equal to the result of the expression. In this case, the result of displ < 5 is a logical variable which takes values of TRUE or FALSE.
 
 ```
 
@@ -81,6 +89,8 @@ What plots does the following code make? What does . do?
 
 ```{r}
 ggplot(data = mpg) + geom_point(mapping = aes(x = displ, y = hwy)) + facet_grid(drv ~ .)
+
+#The symbol . ignores that dimension when faceting. For example, drv ~ . facet by values of drv on the y-axis.
 ```
 
 
@@ -88,30 +98,47 @@ ggplot(data = mpg) + geom_point(mapping = aes(x = displ, y = hwy)) + facet_grid(
 Run this code in your head and predict what the output will look like. Then, run the code in R and check your predictions.
 
 ```{r}
-ggplot(data = mpg, mapping = aes(x = displ, y = hwy, color = drv)) + geom_point() + geom_smooth(se = FALSE)
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy, color = drv)) + 
+geom_point() + 
+geom_smooth(se = FALSE)
+
+#This code produces a scatter plot with displ on the x-axis, hwy on the y-axis, and the points colored by drv. There will be a smooth line, without standard errors, fit through each drv group.
 ```
 
 What does the se argument to geom_smooth() do?
 
 ```{r}
+#It adds standard error bands to the lines. By default se = TRUE
 
-```
-
-What is the default geom associated with stat_summary()?
-
-```{r}
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy, colour = drv)) +
+  geom_point() +
+  geom_smooth(se = TRUE)
 
 ```
 
 What does geom_col() do? How is it different to geom_bar()?
 
 ```{r}
+#The geom_col() function has different default stat than geom_bar(). The default stat of geom_col() is stat_identity(), which leaves the data as is. The geom_col() function expects that the data contains x values and y values which represent the bar height.
 
+#The default stat of geom_bar() is stat_count(). The geom_bar() function only expects an x variable. The stat, stat_count(), preprocesses input data by counting the number of observations for each value of x. The y aesthetic uses the values of these counts.
 ```
 
 Create one plot on the fuel economy data with customized title, subtitle, caption, x, y, and colour labels.
 
 ```{r}
+ggplot(
+  data = mpg,
+  mapping = aes(x = fct_reorder(class, hwy), y = hwy)
+) +
+  geom_boxplot() +
+  coord_flip() +
+  labs(
+    title = "Compact Cars have > 10 Hwy MPG than Pickup Trucks",
+    subtitle = "Comparing the median highway mpg in each class",
+    caption = "Data from fueleconomy.gov",
+    x = "Car Class",
+    y = "Highway Miles per Gallon"
 
 ```
 
